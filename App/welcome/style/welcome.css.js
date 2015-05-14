@@ -15,7 +15,7 @@ var styles = StyleSheet.create({
 
   // 轮播图部分
   wrapper: { 
-    backgroundColor: '#f00',
+
   },
   slide: {
     flex: 1,

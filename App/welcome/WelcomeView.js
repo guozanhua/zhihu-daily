@@ -79,7 +79,10 @@ var WelcomeView = React.createClass({
 
   renderRow: function(stories) {
     return (
-      <TouchableHighlight onPress={this.navToDetail.bind(this, stories)}>
+      <TouchableHighlight 
+        onPress={this.navToDetail.bind(this, stories)}
+        underlayColor='transparent'
+        >
         <View style={styles.list} >
           <Text style={styles.title}>{stories.title}</Text>
           <Image
@@ -93,14 +96,14 @@ var WelcomeView = React.createClass({
 
   navToDetail: function(stories) {
     this.props.navigator.push({
-      title: stories.title,
+      title: '详情页',
       component: DetailView,
-      passProps: {storyId: stories.id}
+      passProps: {storyId: stories.id},
+      leftButtonTitle: '返回',
+      onLeftButtonPress: () => this.props.navigator.pop(),
     })
   },
 
 });
-
-
 
 module.exports = WelcomeView;

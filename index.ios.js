@@ -17,6 +17,9 @@ var ZhihuDaily = React.createClass({
   return (
     <NavigatorIOS
       style={{flex: 1,}}
+      barTintColor='#09e'
+      titleTextColor='#fff'
+      tintColor='#fff'
       initialRoute={{
         component: WelcomeView,
         title: '知乎日报',
