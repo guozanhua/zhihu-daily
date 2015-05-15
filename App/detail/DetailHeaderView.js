@@ -19,9 +19,10 @@ var DetailHeaderView = React.createClass({
   render: function() {
     var data = this.props.detailData;
     return (
-      <Image style={styles.image} source={{uri: data.image}}>
-        <Text style={styles.title}>{data.title}</Text>
-      </Image>
+        <Image style={styles.image} source={{uri: data.image}}>
+        <View style={styles.mask}></View>
+          <Text style={styles.title}>{data.title}</Text>
+        </Image>
     );
   }
 

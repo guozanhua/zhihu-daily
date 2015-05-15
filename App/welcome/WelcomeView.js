@@ -68,7 +68,18 @@ var WelcomeView = React.createClass({
             this.state.topStories.map((story) => {
               return (
                 <View style={styles.slide} title={<Text numberOfLines={2} style={styles.topStoryTitle}>{story.title}</Text>}>
-                  <Image style={styles.image} source={{uri: story.image}} />
+                  <TouchableHighlight
+                    onPress={this.navToDetail.bind(this, story)}
+                  >
+                    <Image style={styles.image} source={{uri: story.image}} />
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    onPress={this.navToDetail.bind(this, story)}
+                    style={styles.mask}
+                    underlayColor='transparent'
+                  >
+                    <View style={styles.mask}></View>
+                  </TouchableHighlight>
                 </View>
                 )
             })
@@ -96,7 +107,7 @@ var WelcomeView = React.createClass({
 
   navToDetail: function(stories) {
     this.props.navigator.push({
-      title: '详情页',
+      title: '详情页' + stories.id,
       component: DetailView,
       passProps: {storyId: stories.id},
       leftButtonTitle: '返回',

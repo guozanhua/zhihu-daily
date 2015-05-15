@@ -10,7 +10,8 @@ var {
   ScrollView,
 } = React;
 
-var HtmlView = require('react-native-htmlview');
+var HTMLView = require('react-native-htmlview');
+
 
 var DetailModel = require('./model/DetailModel');
 var styles = require('./style/detail.css');
@@ -89,19 +90,33 @@ var DetailContentView = React.createClass({
 
   render: function() {
     var data = this.props.detailData;
-
+    data.body = data.body.replace(/\s+/g, '');
     return (
-      <View style={htmlVeiwStyles.infoDetail}>
-        <Text>{data.body}</Text>
+      <View style={htmlViewStyles.infoDetail}>
+        <HTMLView
+          value={data.body}
+          onLinkPress={(url) => console.log('navigating to: ', url)}
+          stylesheet={htmlViewStyles}
+        />
       </View>
     );
   }
 
 });
 
-var htmlVeiwStyles = StyleSheet.create({
+var htmlViewStyles = StyleSheet.create({
   infoDetail: {
     flex: 1,
+    marginLeft: 10,
+    marginTop: 10,
+    marginRight: 10,
+  },
+
+  p: {
+    lineHeight: 20,
+    fontSize: 14,
+    borderLeftColor: '#eee',
+    borderLeftWidth: 1,
   },
 
   a: {
@@ -109,46 +124,5 @@ var htmlVeiwStyles = StyleSheet.create({
     color: '#FF3366', // pink links
   },
 })
-
-
-// class DetailView extends React.Component {
-
-//   getInitialState() {
-//     return {
-//       isLoading: true,
-//       data: {},
-//     };
-//   }
-
-//   componentWillMount() {
-//     var storyId = this.props.storyId;
-//     detailModel.getDetailInfo(storyId)
-//       .then((responseData) => {
-//         console.log(responseData);
-//       })
-//   }
-
-//   render() {
-//     alert(this.state);
-
-
-//     return (
-//       <ScrollView 
-//         automaticallyAdjustContentInsets={true}
-//         style={styles.container}>
-
-//         {/* 头部图片展示区 */}
-//         <DetailHeaderView />
-
-//         {/* 推荐作者信息 */}
-//         <RecomanderView />
-
-//         {/* 内容部分 */}
-//         <DetailContentView />
-
-//       </ScrollView>
-//       )
-//   }
-// }
 
 module.exports = DetailView;

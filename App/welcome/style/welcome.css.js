@@ -24,6 +24,16 @@ var styles = StyleSheet.create({
   image: {
     height: 220,
   },
+  mask: {
+    flex: 1,
+    height: 220,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0, 
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,.3)',
+  },
   dot: {
     backgroundColor:'rgba(0,0,0,.2)', 
     width: 5, 
@@ -54,8 +64,9 @@ var styles = StyleSheet.create({
     left: 15,
     position: 'absolute',
     fontSize: 16,
-    color: '#ffffff',
+    color: '#fff',
     width: screenWidth - 30,
+    lineHeight: 20,
   },
 
   // 今日推荐列表 
