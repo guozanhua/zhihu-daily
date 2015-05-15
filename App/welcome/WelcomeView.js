@@ -15,7 +15,12 @@ var styles = require('./style/welcome.css');
 
 var WelcomeModel = require('./model/WelcomeModel');
 var Swiper = require('react-native-swiper');
-var welcomeModel = new WelcomeModel();
+var welcomeModel = new WelcomeModel({
+  initialState: {
+    index: 0
+  }
+});
+
 
 var DetailView = require('../detail/DetailView');
 
@@ -23,18 +28,30 @@ var DetailView = require('../detail/DetailView');
 var WelcomeView = React.createClass({
 
   getInitialState: function() {
+
     return {
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
-      value: 0,
       topStories: [],
+      stories: [],
+      date: this.getDateFormat(new Date()),
     };
+  },
+
+  getDateFormat: function(date) {
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1 > 9 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+    var day = date.getDate();
+
+    return '' + year + month + day;
   },
 
   componentWillMount: function () {
     welcomeModel.getLatestNews()
         .then((responseData) => {
+          this.state.stories = this.state.stories.concat(responseData.stories);
           this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(responseData.stories),
+            stories: this.state.stories,
+            dataSource: this.state.dataSource.cloneWithRows(this.state.stories),
             topStories: responseData.top_stories,
           });
         })
@@ -50,6 +67,8 @@ var WelcomeView = React.createClass({
       <ListView
         dataSource={this.state.dataSource}
         pageSize={10}
+        onEndReached={this.endReached}
+        onEndReachedThreshold={100}
         renderHeader={this.renderHeader}
         renderRow={this.renderRow} />
     );
@@ -89,6 +108,9 @@ var WelcomeView = React.createClass({
   },
 
   renderRow: function(stories) {
+    if (!stories.images || stories.images.length <= 0) {
+      return null;
+    };
     return (
       <TouchableHighlight 
         onPress={this.navToDetail.bind(this, stories)}
@@ -103,6 +125,24 @@ var WelcomeView = React.createClass({
         </View>
       </TouchableHighlight>
       )
+  },
+
+  endReached: function() {
+
+    var index = welcomeModel.get('index');
+    var searchDay = new Date(new Date() - 24*60*60*1000 * (++index));
+    welcomeModel.set('index', index);
+
+    welcomeModel.getNewsByDate(this.getDateFormat(searchDay))
+        .then((responseData) => {
+          this.state.stories = this.state.stories.concat(responseData.stories);
+          console.log(this.state);
+          this.setState({
+            stories: this.state.stories,
+            dataSource: this.state.dataSource.cloneWithRows(this.state.stories),
+          });
+        })
+        .done();
   },
 
   navToDetail: function(stories) {

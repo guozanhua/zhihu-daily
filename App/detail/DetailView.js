@@ -110,6 +110,7 @@ var htmlViewStyles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
     marginRight: 10,
+    paddingBottom: 40,
   },
 
   p: {
