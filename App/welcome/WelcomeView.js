@@ -11,10 +11,12 @@ var {
   SliderIOS,
 } = React;
 
+var RefreshableListView = require('react-native-refreshable-listview');
+var Swiper = require('react-native-swiper');
+
 var styles = require('./style/welcome.css');
 
 var WelcomeModel = require('./model/WelcomeModel');
-var Swiper = require('react-native-swiper');
 var welcomeModel = new WelcomeModel({
   initialState: {
     index: 0
@@ -64,14 +66,23 @@ var WelcomeView = React.createClass({
     };
 
     return (
-      <ListView
+      <RefreshableListView
         dataSource={this.state.dataSource}
         pageSize={10}
         onEndReached={this.endReached}
         onEndReachedThreshold={100}
         renderHeader={this.renderHeader}
+        loadData={this.reloadStory}
+        refreshDescription="Refreshing articles"
+        refreshingIndictatorComponent={
+            <RefreshableListView.RefreshingIndicator stylesheet={indicatorStylesheet} />
+          }
         renderRow={this.renderRow} />
     );
+  },
+
+  reloadStory: function() {
+    console.log(12);
   },
 
   renderHeader: function() {
@@ -86,7 +97,7 @@ var WelcomeView = React.createClass({
           { 
             this.state.topStories.map((story) => {
               return (
-                <View style={styles.slide} title={<Text numberOfLines={2} style={styles.topStoryTitle}>{story.title}</Text>}>
+                <View key={story.id} style={styles.slide} title={<Text numberOfLines={2} style={styles.topStoryTitle}>{story.title}</Text>}>
                   <TouchableHighlight
                     onPress={this.navToDetail.bind(this, story)}
                   >
@@ -136,7 +147,6 @@ var WelcomeView = React.createClass({
     welcomeModel.getNewsByDate(this.getDateFormat(searchDay))
         .then((responseData) => {
           this.state.stories = this.state.stories.concat(responseData.stories);
-          console.log(this.state);
           this.setState({
             stories: this.state.stories,
             dataSource: this.state.dataSource.cloneWithRows(this.state.stories),
@@ -156,5 +166,14 @@ var WelcomeView = React.createClass({
   },
 
 });
+
+
+var indicatorStylesheet = StyleSheet.create({
+  wrapper: {
+    backgroundColor: '#ffffff',
+    height: 60,
+    marginTop: 10,
+  },
+})
 
 module.exports = WelcomeView;

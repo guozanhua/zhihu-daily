@@ -18,7 +18,7 @@ class WelcomeModel extends Model {
    */
   getLatestNews() {
     return fetch(this.API.NEWS_LATEST)
-      .then((response) => response.json());
+            .then((response) => response.json());
   }
 
   /**
